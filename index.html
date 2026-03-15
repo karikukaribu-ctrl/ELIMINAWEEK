@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ILLUMINATOR Planner V1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-glow"></div>
+        <div class="brand-title">ILLUMINATOR</div>
+        <div class="brand-sub">weekly mission planner</div>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-btn active" data-view="dashboard">Dashboard</button>
+        <button class="nav-btn" data-view="day">Journée</button>
+        <button class="nav-btn" data-view="week">Semaine</button>
+        <button class="nav-btn" data-view="month">Mois</button>
+        <button class="nav-btn" data-view="projects">Projets</button>
+        <button class="nav-btn" data-view="report">Rapport</button>
+      </nav>
+
+      <section class="side-panel">
+        <div class="panel-label">CAPACITÉ DU JOUR</div>
+        <div id="capacityTokens" class="capacity-tokens"></div>
+      </section>
+
+      <section class="side-panel">
+        <div class="panel-label">NOYAU PROJET</div>
+        <div id="focusProject" class="focus-project-card"></div>
+      </section>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <div class="eyebrow">CENTRE DE PILOTAGE</div>
+          <h1 id="headerTitle">Dashboard</h1>
+        </div>
+
+        <div class="topbar-right">
+          <div class="date-chip" id="todayLabel"></div>
+          <button id="resetDemoBtn" class="ghost-btn">Réinitialiser la démo</button>
+        </div>
+      </header>
+
+      <section id="view-dashboard" class="view active">
+        <div class="grid-two">
+          <article class="card hero-card">
+            <div class="card-head">
+              <span class="card-kicker">TRAJECTOIRE DU JOUR</span>
+              <span class="status-pill">live</span>
+            </div>
+
+            <div class="hero-stats">
+              <div class="stat-block">
+                <div class="stat-label">Énergie</div>
+                <div id="energyValue" class="stat-value">76%</div>
+              </div>
+              <div class="stat-block">
+                <div class="stat-label">Temps injecté</div>
+                <div id="workedTodayValue" class="stat-value">0h</div>
+              </div>
+              <div class="stat-block">
+                <div class="stat-label">Blocs réalisés</div>
+                <div id="completedBlocksValue" class="stat-value">0</div>
+              </div>
+            </div>
+
+            <div class="curve-wrap">
+              <div class="curve-title">DENSITÉ DE JOURNÉE</div>
+              <div class="density-bar">
+                <div id="densityFill" class="density-fill"></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="section-title-row">
+              <h2>LIGNE DU JOUR</h2>
+              <span class="mini-badge">Tetris temporel</span>
+            </div>
+            <div id="dayTimeline" class="day-timeline"></div>
+          </article>
+        </div>
+
+        <div class="grid-two">
+          <article class="card">
+            <div class="section-title-row">
+              <h2>PROJETS ACTIFS</h2>
+              <span class="mini-badge">progression</span>
+            </div>
+            <div id="projectCards" class="project-cards"></div>
+          </article>
+
+          <article class="card">
+            <div class="section-title-row">
+              <h2>JOURNAL DE CYCLE</h2>
+              <span class="mini-badge">automatique</span>
+            </div>
+            <div id="dailyLog" class="daily-log"></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="view-day" class="view">
+        <div class="grid-two">
+          <article class="card">
+            <div class="section-title-row">
+              <h2>BLOCS ARMÉS</h2>
+              <span class="mini-badge">menu du jour</span>
+            </div>
+
+            <div class="capacity-builder">
+              <div class="capacity-row">
+                <label>Blocs 2h</label>
+                <input id="input2h" type="number" min="0" max="8" value="2" />
+              </div>
+              <div class="capacity-row">
+                <label>Blocs 1h</label>
+                <input id="input1h" type="number" min="0" max="12" value="2" />
+              </div>
+              <div class="capacity-row">
+                <label>Blocs 30 min</label>
+                <input id="input30m" type="number" min="0" max="20" value="2" />
+              </div>
+              <div class="capacity-row">
+                <label>Blocs 15 min</label>
+                <input id="input15m" type="number" min="0" max="20" value="2" />
+              </div>
+
+              <button id="saveCapacityBtn" class="primary-btn">Mettre à jour la capacité</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="section-title-row">
+              <h2>INJECTER UN BLOC</h2>
+              <span class="mini-badge">nouvelle session</span>
+            </div>
+
+            <div class="session-form">
+              <label>
+                Projet
+                <select id="sessionProject"></select>
+              </label>
+
+              <label>
+                Titre du bloc
+                <input id="sessionTitle" type="text" placeholder="ex. rédaction intro article" />
+              </label>
+
+              <label>
+                Catégorie
+                <select id="sessionCategory">
+                  <option value="deep">Travail profond</option>
+                  <option value="admin">Administratif</option>
+                  <option value="resource">Ressource</option>
+                  <option value="sport">Sport</option>
+                  <option value="pause">Pause</option>
+                </select>
+              </label>
+
+              <div class="session-form-grid">
+                <label>
+                  Début
+                  <input id="sessionStart" type="time" value="08:00" />
+                </label>
+
+                <label>
+                  Durée
+                  <select id="sessionDuration">
+                    <option value="120">2h</option>
+                    <option value="60">1h</option>
+                    <option value="30">30 min</option>
+                    <option value="15">15 min</option>
+                  </select>
+                </label>
+              </div>
+
+              <button id="addSessionBtn" class="primary-btn">Ajouter le bloc</button>
+            </div>
+          </article>
+        </div>
+
+        <article class="card">
+          <div class="section-title-row">
+            <h2>TIMELINE RÉELLE</h2>
+            <span class="mini-badge">temps linéaire</span>
+          </div>
+          <div id="dayTimelineDetailed" class="day-timeline detailed"></div>
+        </article>
+      </section>
+
+      <section id="view-week" class="view">
+        <article class="card">
+          <div class="section-title-row">
+            <h2>TRAJECTOIRE HEBDO</h2>
+            <span class="mini-badge">linéaire</span>
+          </div>
+          <div id="weekStrip" class="week-strip"></div>
+        </article>
+      </section>
+
+      <section id="view-month" class="view">
+        <article class="card">
+          <div class="section-title-row">
+            <h2>CALENDRIER MISSIONNEL</h2>
+            <span class="mini-badge">vue mensuelle</span>
+          </div>
+          <div id="monthGrid" class="month-grid"></div>
+        </article>
+      </section>
+
+      <section id="view-projects" class="view">
+        <article class="card">
+          <div class="section-title-row">
+            <h2>PROJETS</h2>
+            <span class="mini-badge">avancement</span>
+          </div>
+          <div id="projectsTable" class="projects-table"></div>
+        </article>
+      </section>
+
+      <section id="view-report" class="view">
+        <div class="grid-two">
+          <article class="card">
+            <div class="section-title-row">
+              <h2>RAPPORT DU JOUR</h2>
+              <span class="mini-badge">auto</span>
+            </div>
+            <div id="dayReport" class="report-box"></div>
+          </article>
+
+          <article class="card">
+            <div class="section-title-row">
+              <h2>RAPPORT DE SEMAINE</h2>
+              <span class="mini-badge">synthèse</span>
+            </div>
+            <div id="weekReport" class="report-box"></div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <aside class="rightbar">
+      <section class="side-panel">
+        <div class="panel-label">TÂCHES TERMINÉES</div>
+        <div id="completedList" class="completed-list"></div>
+      </section>
+
+      <section class="side-panel">
+        <div class="panel-label">SIGNAL DE CHARGE</div>
+        <div class="charge-ring-wrap">
+          <div class="charge-ring">
+            <div id="chargeRingValue" class="charge-ring-value">0%</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="side-panel">
+        <div class="panel-label">RÉCAP EXPRESS</div>
+        <div id="quickSummary" class="quick-summary"></div>
+      </section>
+    </aside>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
