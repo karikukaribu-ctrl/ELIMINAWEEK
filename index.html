@@ -2,577 +2,267 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Illuminator — Bullet Journal Cockpit</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-    rel="stylesheet"
-  />
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>ILLUMINATOR</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Yusei+Magic&family=Zen+Maru+Gothic:wght@400;500;700&family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Kosugi+Maru&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body data-mode="dark" data-season="winter">
-  <div class="app-shell">
+<body class="theme--hiver mode--sombre" data-font="inter">
+  <div class="bg-orbs" aria-hidden="true"></div>
 
-    <header class="topbar">
-      <div class="topbar-left">
-        <div class="brand-wrap">
-          <div class="brand-mark"></div>
-          <div>
-            <div class="brand-title">ILLUMINATOR</div>
-            <div class="brand-sub">bullet journal cockpit</div>
+  <header class="topbar">
+    <div class="topbar__left">
+      <button id="btnLeft" class="icon-btn" type="button" aria-label="Ouvrir panneau gauche">≡</button>
+    </div>
+
+    <div class="topbar__center">
+      <div class="top-actions">
+        <button id="modeToggle" class="top-btn" type="button">Clair</button>
+        <button id="seasonCycle" class="top-btn" type="button">Hiver</button>
+        <button id="focusBtn" class="top-btn" type="button">Focus</button>
+      </div>
+    </div>
+
+    <div class="topbar__right">
+      <button id="btnRight" class="icon-btn" type="button" aria-label="Ouvrir panneau droit">⋮</button>
+    </div>
+  </header>
+
+  <div id="panelBack" class="panel-back" hidden></div>
+
+  <!-- PANNEAU GAUCHE -->
+  <aside id="leftPanel" class="panel panel--left" hidden aria-label="Panneau gauche">
+    <div class="panel__head">
+      <div class="panel__title">Menu</div>
+      <button id="leftClose" class="icon-btn" type="button" aria-label="Fermer panneau gauche">×</button>
+    </div>
+
+    <nav class="tabs" aria-label="Onglets panneau gauche">
+      <button class="tab-btn is-active" data-lefttab="inbox" type="button">Inbox</button>
+      <button class="tab-btn" data-lefttab="projects" type="button">Projets</button>
+      <button class="tab-btn" data-lefttab="tasks" type="button">Tâches</button>
+      <button class="tab-btn" data-lefttab="prefs" type="button">Préférences</button>
+    </nav>
+
+    <div class="panel__body">
+      <section id="left-inbox" class="tab-page is-show">
+        <p class="helper">
+          Une ligne = une tâche. Format rapide :
+          <br><span class="mono">Introduction article - 30</span>
+        </p>
+
+        <textarea id="inboxText" class="field textarea" rows="10" placeholder="Introduction article - 30&#10;Plan carnet de stage - 20&#10;Rythme batterie - 10"></textarea>
+
+        <div class="row">
+          <button id="inboxAdd" class="action-btn action-btn--accent" type="button">Ajouter</button>
+          <button id="inboxClear" class="action-btn" type="button">Effacer</button>
+        </div>
+      </section>
+
+      <section id="left-projects" class="tab-page">
+        <div id="projectList" class="stack"></div>
+
+        <div class="soft-sep"></div>
+
+        <div class="field-group">
+          <label class="label-mini" for="newProjectName">Nouveau projet</label>
+          <input id="newProjectName" class="field input" type="text" placeholder="Nom du projet">
+        </div>
+
+        <div class="row">
+          <input id="newProjectColor" class="field input color-input" type="color" value="#8dbcf0">
+          <button id="addProjectBtn" class="action-btn action-btn--accent" type="button">Créer</button>
+        </div>
+      </section>
+
+      <section id="left-tasks" class="tab-page">
+        <div id="taskList" class="stack"></div>
+      </section>
+
+      <section id="left-prefs" class="tab-page">
+        <div class="grid-2">
+          <div class="field-group">
+            <label class="label-mini" for="fontSel">Police</label>
+            <select id="fontSel" class="field select">
+              <option value="inter">Inter</option>
+              <option value="yusei">Yusei Magic</option>
+              <option value="zen">Zen Maru Gothic</option>
+              <option value="mplus">M PLUS Rounded</option>
+              <option value="kosugi">Kosugi Maru</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label class="label-mini" for="uiScale">Taille</label>
+            <input id="uiScale" class="field range" type="range" min="14" max="18" step="1">
           </div>
         </div>
 
-        <nav class="topnav">
-          <button class="topnav-btn active" data-view="day">JOUR</button>
-          <button class="topnav-btn" data-view="week">SEMAINE</button>
-          <button class="topnav-btn" data-view="month">MOIS</button>
-          <button class="topnav-btn" data-view="projects">PROJETS</button>
-          <button class="topnav-btn" data-view="journal">JOURNAL</button>
-          <button class="topnav-btn" data-view="report">RAPPORT</button>
-        </nav>
+        <div class="row">
+          <button id="resetAppBtn" class="action-btn action-btn--danger" type="button">Reset</button>
+        </div>
+      </section>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="app-shell">
+    <div class="app-shell__inner">
+      <h1 class="app-title">ILLUMINATOR</h1>
+      <p class="subtitle">Voir l’avancement. Réduire la friction.</p>
+
+      <section class="progress-shell">
+        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+          <div id="dayProgressFill" class="progress-fill"></div>
+          <div id="dayProgressText" class="progress-pct">0%</div>
+        </div>
+      </section>
+
+      <section class="mission-card">
+        <div id="statusSpot" class="status-spot">Prêt.</div>
+
+        <div class="dashboard-grid">
+          <section class="project-towers-wrap">
+            <div id="projectTowers" class="project-towers"></div>
+          </section>
+
+          <section class="current-focus">
+            <div class="panel-title">Maintenant</div>
+            <div id="taskTitle" class="task-title">Aucune tâche</div>
+            <div id="taskMeta" class="task-meta">—</div>
+
+            <div class="center-actions">
+              <button id="startBtn" class="side-btn" type="button" title="Commencer">▶</button>
+
+              <button id="rouletteBtn" class="roulette-btn" type="button" aria-label="Choix">
+                <div id="rouletteWheel" class="roulette-wheel">
+                  <span class="roulette-wheel__txt">Choisir</span>
+                </div>
+              </button>
+
+              <button id="shrinkBtn" class="side-btn side-btn--accent" type="button" title="Réduire">–</button>
+            </div>
+
+            <div class="quick-links">
+              <button id="doneTaskBtn" class="quick-link" type="button">Terminer</button>
+              <button id="nextTaskBtn" class="quick-link" type="button">Changer</button>
+              <button id="editTaskBtn" class="quick-link" type="button">Éditer</button>
+            </div>
+          </section>
+        </div>
+
+        <section class="timeline-shell">
+          <div class="panel-title">Jour</div>
+          <div id="dayTimeline" class="mini-timeline"></div>
+        </section>
+
+        <section class="micro-inline">
+          <span id="pillTasks">0 tâches</span>
+          <span id="pillDone">0 faites</span>
+          <span id="pillFocus">focus normal</span>
+        </section>
+      </section>
+    </div>
+  </main>
+
+  <!-- PANNEAU DROIT -->
+  <aside id="rightPanel" class="panel panel--right" hidden aria-label="Panneau droit">
+    <div class="panel__head">
+      <div class="panel__title">Panneau</div>
+      <button id="rightClose" class="icon-btn" type="button" aria-label="Fermer panneau droit">×</button>
+    </div>
+
+    <nav class="tabs" aria-label="Onglets panneau droit">
+      <button class="tab-btn is-active" data-righttab="day" type="button">Jour</button>
+      <button class="tab-btn" data-righttab="week" type="button">Semaine</button>
+      <button class="tab-btn" data-righttab="month" type="button">Mois</button>
+      <button class="tab-btn" data-righttab="kiff" type="button">Kiffance</button>
+      <button class="tab-btn" data-righttab="notes" type="button">Notes</button>
+    </nav>
+
+    <div class="panel__body">
+      <section id="right-day" class="tab-page is-show">
+        <div id="daySummary" class="stack"></div>
+      </section>
+
+      <section id="right-week" class="tab-page">
+        <div id="weekBars" class="stack"></div>
+      </section>
+
+      <section id="right-month" class="tab-page">
+        <div id="monthGrid" class="calendar-grid month-grid"></div>
+      </section>
+
+      <section id="right-kiff" class="tab-page">
+        <div class="grid-2">
+          <button class="action-btn kiff-btn" data-kiff="1" type="button">1 min</button>
+          <button class="action-btn kiff-btn" data-kiff="5" type="button">5 min</button>
+          <button class="action-btn kiff-btn" data-kiff="30" type="button">30 min</button>
+          <button class="action-btn kiff-btn" data-kiff="60" type="button">60 min</button>
+        </div>
+
+        <div class="soft-sep"></div>
+
+        <div id="kiffSuggestion" class="surprise-card">Choisir une durée.</div>
+      </section>
+
+      <section id="right-notes" class="tab-page">
+        <div class="field-group">
+          <label class="label-mini" for="notesArea">Notes</label>
+          <textarea id="notesArea" class="field textarea" rows="10"></textarea>
+        </div>
+      </section>
+    </div>
+  </aside>
+
+  <!-- MODAL ÉDITION -->
+  <div id="modalBack" class="modal-back" hidden></div>
+
+  <div id="editModal" class="glass-wrap" hidden role="dialog" aria-modal="true" aria-label="Éditer">
+    <div class="glass-modal glass-modal--small">
+      <div class="glass-modal__head">
+        <div class="panel-title">Édition</div>
+        <button id="modalClose" class="icon-btn" type="button" aria-label="Fermer">×</button>
       </div>
 
-      <div class="topbar-right">
-        <div class="toolbar-group">
-          <label class="toolbar-label" for="modeSelect">Mode</label>
-          <select id="modeSelect" class="toolbar-select">
-            <option value="dark">Sombre</option>
-            <option value="light">Clair</option>
-          </select>
+      <div class="glass-modal__body">
+        <div class="field-group">
+          <label class="label-mini" for="editTaskName">Nom</label>
+          <input id="editTaskName" class="field input" type="text">
         </div>
 
-        <div class="toolbar-group">
-          <label class="toolbar-label" for="seasonSelect">Saison</label>
-          <select id="seasonSelect" class="toolbar-select">
-            <option value="winter">Hiver</option>
-            <option value="spring">Printemps</option>
-            <option value="summer">Été</option>
-            <option value="autumn">Automne</option>
-          </select>
-        </div>
-
-        <div class="toolbar-group">
-          <label class="toolbar-label" for="datePicker">Date active</label>
-          <input id="datePicker" class="toolbar-input" type="date" />
-        </div>
-
-        <div class="topbar-status">
-          <div class="status-chip">
-            <span class="status-chip-label">Cycle</span>
-            <span id="headerWeekLabel" class="status-chip-value">—</span>
+        <div class="grid-2">
+          <div class="field-group">
+            <label class="label-mini" for="editTaskMinutes">Durée</label>
+            <input id="editTaskMinutes" class="field input" type="number" min="1" max="240">
           </div>
-          <div class="status-chip">
-            <span class="status-chip-label">Charge</span>
-            <span id="headerChargeLabel" class="status-chip-value">0%</span>
+
+          <div class="field-group">
+            <label class="label-mini" for="editTaskDifficulty">Effort</label>
+            <select id="editTaskDifficulty" class="field select">
+              <option value="easy">facile</option>
+              <option value="medium">moyen</option>
+              <option value="hard">lourd</option>
+            </select>
           </div>
+        </div>
+
+        <div class="field-group">
+          <label class="label-mini" for="editTaskProject">Projet</label>
+          <select id="editTaskProject" class="field select"></select>
+        </div>
+
+        <div class="row">
+          <button id="saveEditBtn" class="action-btn action-btn--accent" type="button">Sauver</button>
+          <button id="deleteTaskBtn" class="action-btn action-btn--danger" type="button">Supprimer</button>
         </div>
       </div>
-    </header>
-
-    <aside class="leftbar">
-      <section class="panel mission-panel">
-        <div class="panel-head">
-          <div class="panel-title">MISSION</div>
-          <button id="resetDemoBtn" class="panel-btn subtle">reset</button>
-        </div>
-
-        <div class="mission-block">
-          <div class="mini-label">Objectif semaine</div>
-          <div id="weeklyObjective" class="mission-text">—</div>
-        </div>
-
-        <div class="mission-block">
-          <div class="mini-label">Objectif du jour</div>
-          <div id="dailyObjective" class="mission-text">—</div>
-        </div>
-
-        <div class="mission-grid">
-          <div class="mission-metric">
-            <div class="mini-label">Énergie</div>
-            <div id="energyMetric" class="big-metric">0%</div>
-          </div>
-          <div class="mission-metric">
-            <div class="mini-label">Blocs</div>
-            <div id="blocksMetric" class="big-metric">0</div>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-head">
-          <div class="panel-title">PICK ELIMINATOR</div>
-          <button id="randomPickBtn" class="panel-btn primary">tirer</button>
-        </div>
-
-        <div id="randomTaskCard" class="random-task-card">
-          <div class="random-empty">Aucune tâche sélectionnée.</div>
-        </div>
-
-        <div class="random-actions">
-          <button id="launchPickedTaskBtn" class="panel-btn primary">Lancer</button>
-          <button id="migratePickedTaskBtn" class="panel-btn subtle">Migrer</button>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-head">
-          <div class="panel-title">PROJETS ACTIFS</div>
-        </div>
-        <div id="leftProjectsList" class="stack-list"></div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-head">
-          <div class="panel-title">MINI CALENDRIER</div>
-        </div>
-        <div class="mini-calendar-nav">
-          <button id="miniPrevMonth" class="panel-btn subtle">◀</button>
-          <div id="miniCalendarTitle" class="mini-calendar-title">—</div>
-          <button id="miniNextMonth" class="panel-btn subtle">▶</button>
-        </div>
-        <div id="miniCalendarGrid" class="mini-calendar-grid"></div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-head">
-          <div class="panel-title">BULLET INDEX</div>
-        </div>
-        <div class="bullet-stats">
-          <div class="bullet-pill">
-            <span>Inbox</span>
-            <strong id="inboxCount">0</strong>
-          </div>
-          <div class="bullet-pill">
-            <span>Planifié</span>
-            <strong id="plannedCount">0</strong>
-          </div>
-          <div class="bullet-pill">
-            <span>Migré</span>
-            <strong id="migratedCount">0</strong>
-          </div>
-          <div class="bullet-pill">
-            <span>Terminé</span>
-            <strong id="doneCount">0</strong>
-          </div>
-        </div>
-      </section>
-    </aside>
-
-    <main class="workspace">
-
-      <section id="view-day" class="view active">
-        <div class="workspace-grid">
-
-          <article class="card hero-card">
-            <div class="card-headline">
-              <div>
-                <div class="card-kicker">TRAJECTOIRE DU JOUR</div>
-                <h1 id="dayTitle">JOUR ACTIF</h1>
-              </div>
-              <div class="hero-badges">
-                <span class="hero-badge" id="selectedDateLabel">—</span>
-                <span class="hero-badge">timeline modulaire</span>
-              </div>
-            </div>
-
-            <div class="hero-row">
-              <div class="hero-stat">
-                <div class="mini-label">Temps prévu</div>
-                <div id="plannedMinutesLabel" class="hero-stat-value">0h</div>
-              </div>
-              <div class="hero-stat">
-                <div class="mini-label">Temps engagé</div>
-                <div id="scheduledMinutesLabel" class="hero-stat-value">0h</div>
-              </div>
-              <div class="hero-stat">
-                <div class="mini-label">Charge du jour</div>
-                <div id="dayChargeLabel" class="hero-stat-value">0%</div>
-              </div>
-              <div class="hero-stat">
-                <div class="mini-label">Projet dominant</div>
-                <div id="dominantProjectLabel" class="hero-stat-value shrink">—</div>
-              </div>
-            </div>
-
-            <div class="density-wrap">
-              <div class="mini-label">DENSITÉ</div>
-              <div class="density-bar">
-                <div id="densityFill" class="density-fill"></div>
-              </div>
-            </div>
-          </article>
-
-          <article class="card">
-            <div class="card-headline compact">
-              <div>
-                <div class="card-kicker">BLOCS ARMÉS</div>
-                <h2>CAPACITÉ DU JOUR</h2>
-              </div>
-            </div>
-
-            <div class="capacity-grid">
-              <label class="capacity-item">
-                <span>2h</span>
-                <input id="cap120" type="number" min="0" max="10" />
-              </label>
-              <label class="capacity-item">
-                <span>1h</span>
-                <input id="cap60" type="number" min="0" max="14" />
-              </label>
-              <label class="capacity-item">
-                <span>30 min</span>
-                <input id="cap30" type="number" min="0" max="20" />
-              </label>
-              <label class="capacity-item">
-                <span>15 min</span>
-                <input id="cap15" type="number" min="0" max="30" />
-              </label>
-            </div>
-
-            <div class="capacity-actions">
-              <button id="saveCapacityBtn" class="panel-btn primary">Mettre à jour</button>
-            </div>
-
-            <div id="capacityVisual" class="capacity-visual"></div>
-          </article>
-
-          <article class="card full-span">
-            <div class="card-headline compact">
-              <div>
-                <div class="card-kicker">TEMPS LINÉAIRE</div>
-                <h2>LIGNE DU JOUR</h2>
-              </div>
-              <div class="timeline-legend">
-                <span class="legend-chip deep">Travail profond</span>
-                <span class="legend-chip admin">Admin</span>
-                <span class="legend-chip resource">Ressource</span>
-                <span class="legend-chip sport">Sport</span>
-                <span class="legend-chip pause">Pause</span>
-                <span class="legend-chip external">Agenda</span>
-              </div>
-            </div>
-
-            <div id="dayTimeline" class="day-timeline"></div>
-          </article>
-
-          <article class="card">
-            <div class="card-headline compact">
-              <div>
-                <div class="card-kicker">INJECTION</div>
-                <h2>NOUVELLE TÂCHE</h2>
-              </div>
-            </div>
-
-            <form id="taskForm" class="task-form">
-              <label>
-                Titre
-                <input id="taskTitle" type="text" placeholder="ex. rédiger intro article" required />
-              </label>
-
-              <label>
-                Projet
-                <select id="taskProject"></select>
-              </label>
-
-              <label>
-                Catégorie
-                <select id="taskCategory">
-                  <option value="deep">Travail profond</option>
-                  <option value="admin">Administratif</option>
-                  <option value="resource">Ressource</option>
-                  <option value="sport">Sport</option>
-                  <option value="pause">Pause</option>
-                </select>
-              </label>
-
-              <div class="form-row">
-                <label>
-                  Date
-                  <input id="taskDate" type="date" />
-                </label>
-
-                <label>
-                  Priorité
-                  <select id="taskPriority">
-                    <option value="1">Basse</option>
-                    <option value="2">Moyenne</option>
-                    <option value="3">Haute</option>
-                  </select>
-                </label>
-              </div>
-
-              <div class="form-row">
-                <label>
-                  Heure début
-                  <input id="taskStart" type="time" value="08:00" />
-                </label>
-
-                <label>
-                  Durée
-                  <select id="taskDuration">
-                    <option value="120">2h</option>
-                    <option value="90">1h30</option>
-                    <option value="60">1h</option>
-                    <option value="45">45 min</option>
-                    <option value="30">30 min</option>
-                    <option value="15">15 min</option>
-                  </select>
-                </label>
-              </div>
-
-              <label>
-                Notes
-                <textarea id="taskNotes" rows="3" placeholder="étape précise, idée, contrainte…"></textarea>
-              </label>
-
-              <div class="form-actions">
-                <button type="submit" class="panel-btn primary">Créer la tâche</button>
-              </div>
-            </form>
-          </article>
-
-          <article class="card">
-            <div class="card-headline compact">
-              <div>
-                <div class="card-kicker">ENGAGEMENTS</div>
-                <h2>AGENDA EXTERNE</h2>
-              </div>
-            </div>
-
-            <div class="google-placeholder">
-              <div class="placeholder-box">
-                <div class="placeholder-title">Connexion Google Agenda</div>
-                <p>
-                  La structure est prête, mais la vraie synchronisation Google
-                  nécessite OAuth/API. Cette V1 permet de gérer des engagements
-                  externes localement dans la même logique visuelle.
-                </p>
-              </div>
-            </div>
-
-            <form id="externalForm" class="task-form compact-form">
-              <label>
-                Intitulé
-                <input id="externalTitle" type="text" placeholder="ex. rendez-vous, cours, réunion" />
-              </label>
-
-              <div class="form-row">
-                <label>
-                  Date
-                  <input id="externalDate" type="date" />
-                </label>
-                <label>
-                  Heure
-                  <input id="externalStart" type="time" value="13:00" />
-                </label>
-              </div>
-
-              <label>
-                Durée
-                <select id="externalDuration">
-                  <option value="30">30 min</option>
-                  <option value="60">1h</option>
-                  <option value="90">1h30</option>
-                  <option value="120">2h</option>
-                </select>
-              </label>
-
-              <div class="form-actions">
-                <button type="submit" class="panel-btn primary">Ajouter engagement</button>
-              </div>
-            </form>
-          </article>
-        </div>
-      </section>
-
-      <section id="view-week" class="view">
-        <article class="card">
-          <div class="card-headline">
-            <div>
-              <div class="card-kicker">TRAJECTOIRE</div>
-              <h2>SEMAINE LINÉAIRE</h2>
-            </div>
-          </div>
-          <div id="weekStrip" class="week-strip"></div>
-        </article>
-
-        <article class="card">
-          <div class="card-headline compact">
-            <div>
-              <div class="card-kicker">ENGAGEMENTS</div>
-              <h2>VISION D’ENSEMBLE</h2>
-            </div>
-          </div>
-          <div id="weekEngagements" class="week-engagements"></div>
-        </article>
-      </section>
-
-      <section id="view-month" class="view">
-        <article class="card">
-          <div class="card-headline">
-            <div>
-              <div class="card-kicker">CALENDRIER</div>
-              <h2>VISION MENSUELLE</h2>
-            </div>
-            <div class="month-nav">
-              <button id="monthPrevBtn" class="panel-btn subtle">◀</button>
-              <div id="monthLabel" class="month-label">—</div>
-              <button id="monthNextBtn" class="panel-btn subtle">▶</button>
-            </div>
-          </div>
-          <div id="monthGrid" class="month-grid"></div>
-        </article>
-      </section>
-
-      <section id="view-projects" class="view">
-        <div class="workspace-grid">
-          <article class="card">
-            <div class="card-headline compact">
-              <div>
-                <div class="card-kicker">DOSSIERS</div>
-                <h2>PROJETS</h2>
-              </div>
-            </div>
-            <div id="projectWorkbench" class="project-workbench"></div>
-          </article>
-
-          <article class="card">
-            <div class="card-headline compact">
-              <div>
-                <div class="card-kicker">CRÉATION</div>
-                <h2>NOUVEAU PROJET</h2>
-              </div>
-            </div>
-
-            <form id="projectForm" class="task-form">
-              <label>
-                Nom du projet
-                <input id="projectName" type="text" placeholder="ex. Mémoire, recherche, sport..." required />
-              </label>
-
-              <label>
-                Objectif
-                <textarea id="projectObjective" rows="3" placeholder="résultat visé, cap du projet..."></textarea>
-              </label>
-
-              <label>
-                Couleur
-                <input id="projectColor" type="color" value="#64c8ff" />
-              </label>
-
-              <div class="form-actions">
-                <button type="submit" class="panel-btn primary">Créer le projet</button>
-              </div>
-            </form>
-          </article>
-        </div>
-      </section>
-
-      <section id="view-journal" class="view">
-        <div class="workspace-grid">
-          <article class="card">
-            <div class="card-headline compact">
-              <div>
-                <div class="card-kicker">INDEX</div>
-                <h2>INBOX</h2>
-              </div>
-            </div>
-            <div id="journalInbox" class="journal-column"></div>
-          </article>
-
-          <article class="card">
-            <div class="card-headline compact">
-              <div>
-                <div class="card-kicker">PLANIFICATION</div>
-                <h2>PLANIFIÉ</h2>
-              </div>
-            </div>
-            <div id="journalPlanned" class="journal-column"></div>
-          </article>
-
-          <article class="card">
-            <div class="card-headline compact">
-              <div>
-                <div class="card-kicker">MIGRATION</div>
-                <h2>MIGRÉ</h2>
-              </div>
-            </div>
-            <div id="journalMigrated" class="journal-column"></div>
-          </article>
-
-          <article class="card">
-            <div class="card-headline compact">
-              <div>
-                <div class="card-kicker">ARCHIVE</div>
-                <h2>TERMINÉ</h2>
-              </div>
-            </div>
-            <div id="journalDone" class="journal-column"></div>
-          </article>
-        </div>
-      </section>
-
-      <section id="view-report" class="view">
-        <div class="workspace-grid">
-          <article class="card">
-            <div class="card-headline compact">
-              <div>
-                <div class="card-kicker">SYNTHÈSE</div>
-                <h2>RAPPORT DU JOUR</h2>
-              </div>
-            </div>
-            <div id="dayReport" class="report-grid"></div>
-          </article>
-
-          <article class="card">
-            <div class="card-headline compact">
-              <div>
-                <div class="card-kicker">SYNTHÈSE</div>
-                <h2>RAPPORT DE SEMAINE</h2>
-              </div>
-            </div>
-            <div id="weekReport" class="report-grid"></div>
-          </article>
-        </div>
-      </section>
-
-    </main>
-
-    <aside class="rightbar">
-      <section class="panel">
-        <div class="panel-head">
-          <div class="panel-title">ACTION SUIVANTE</div>
-        </div>
-        <div id="nextActionCard" class="next-action-card"></div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-head">
-          <div class="panel-title">BLOCS DU JOUR</div>
-        </div>
-        <div id="dayBlocksList" class="stack-list"></div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-head">
-          <div class="panel-title">JOURNAL RAPIDE</div>
-        </div>
-        <textarea id="dailyNotesInput" class="side-notes" rows="8" placeholder="Ce qui a avancé, ce qui coince, ce qu’il faut migrer…"></textarea>
-        <div class="form-actions">
-          <button id="saveDailyNotesBtn" class="panel-btn primary">Sauvegarder</button>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-head">
-          <div class="panel-title">RÉCAP EXPRESS</div>
-        </div>
-        <div id="quickSummary" class="quick-summary"></div>
-      </section>
-    </aside>
+    </div>
   </div>
 
   <script src="app.js"></script>
