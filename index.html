@@ -3,82 +3,202 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ILLUMINATOR Planner V1</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <title>Illuminator — Bullet Journal Cockpit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet"
-  >
+  />
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body data-mode="dark" data-season="winter">
   <div class="app-shell">
-    <aside class="sidebar">
-      <div class="brand">
-        <div class="brand-glow"></div>
-        <div class="brand-title">ILLUMINATOR</div>
-        <div class="brand-sub">weekly mission planner</div>
+
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="brand-wrap">
+          <div class="brand-mark"></div>
+          <div>
+            <div class="brand-title">ILLUMINATOR</div>
+            <div class="brand-sub">bullet journal cockpit</div>
+          </div>
+        </div>
+
+        <nav class="topnav">
+          <button class="topnav-btn active" data-view="day">JOUR</button>
+          <button class="topnav-btn" data-view="week">SEMAINE</button>
+          <button class="topnav-btn" data-view="month">MOIS</button>
+          <button class="topnav-btn" data-view="projects">PROJETS</button>
+          <button class="topnav-btn" data-view="journal">JOURNAL</button>
+          <button class="topnav-btn" data-view="report">RAPPORT</button>
+        </nav>
       </div>
 
-      <nav class="nav">
-        <button class="nav-btn active" data-view="dashboard">Dashboard</button>
-        <button class="nav-btn" data-view="day">Journée</button>
-        <button class="nav-btn" data-view="week">Semaine</button>
-        <button class="nav-btn" data-view="month">Mois</button>
-        <button class="nav-btn" data-view="projects">Projets</button>
-        <button class="nav-btn" data-view="report">Rapport</button>
-      </nav>
+      <div class="topbar-right">
+        <div class="toolbar-group">
+          <label class="toolbar-label" for="modeSelect">Mode</label>
+          <select id="modeSelect" class="toolbar-select">
+            <option value="dark">Sombre</option>
+            <option value="light">Clair</option>
+          </select>
+        </div>
 
-      <section class="side-panel">
-        <div class="panel-label">CAPACITÉ DU JOUR</div>
-        <div id="capacityTokens" class="capacity-tokens"></div>
+        <div class="toolbar-group">
+          <label class="toolbar-label" for="seasonSelect">Saison</label>
+          <select id="seasonSelect" class="toolbar-select">
+            <option value="winter">Hiver</option>
+            <option value="spring">Printemps</option>
+            <option value="summer">Été</option>
+            <option value="autumn">Automne</option>
+          </select>
+        </div>
+
+        <div class="toolbar-group">
+          <label class="toolbar-label" for="datePicker">Date active</label>
+          <input id="datePicker" class="toolbar-input" type="date" />
+        </div>
+
+        <div class="topbar-status">
+          <div class="status-chip">
+            <span class="status-chip-label">Cycle</span>
+            <span id="headerWeekLabel" class="status-chip-value">—</span>
+          </div>
+          <div class="status-chip">
+            <span class="status-chip-label">Charge</span>
+            <span id="headerChargeLabel" class="status-chip-value">0%</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <aside class="leftbar">
+      <section class="panel mission-panel">
+        <div class="panel-head">
+          <div class="panel-title">MISSION</div>
+          <button id="resetDemoBtn" class="panel-btn subtle">reset</button>
+        </div>
+
+        <div class="mission-block">
+          <div class="mini-label">Objectif semaine</div>
+          <div id="weeklyObjective" class="mission-text">—</div>
+        </div>
+
+        <div class="mission-block">
+          <div class="mini-label">Objectif du jour</div>
+          <div id="dailyObjective" class="mission-text">—</div>
+        </div>
+
+        <div class="mission-grid">
+          <div class="mission-metric">
+            <div class="mini-label">Énergie</div>
+            <div id="energyMetric" class="big-metric">0%</div>
+          </div>
+          <div class="mission-metric">
+            <div class="mini-label">Blocs</div>
+            <div id="blocksMetric" class="big-metric">0</div>
+          </div>
+        </div>
       </section>
 
-      <section class="side-panel">
-        <div class="panel-label">NOYAU PROJET</div>
-        <div id="focusProject" class="focus-project-card"></div>
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-title">PICK ELIMINATOR</div>
+          <button id="randomPickBtn" class="panel-btn primary">tirer</button>
+        </div>
+
+        <div id="randomTaskCard" class="random-task-card">
+          <div class="random-empty">Aucune tâche sélectionnée.</div>
+        </div>
+
+        <div class="random-actions">
+          <button id="launchPickedTaskBtn" class="panel-btn primary">Lancer</button>
+          <button id="migratePickedTaskBtn" class="panel-btn subtle">Migrer</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-title">PROJETS ACTIFS</div>
+        </div>
+        <div id="leftProjectsList" class="stack-list"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-title">MINI CALENDRIER</div>
+        </div>
+        <div class="mini-calendar-nav">
+          <button id="miniPrevMonth" class="panel-btn subtle">◀</button>
+          <div id="miniCalendarTitle" class="mini-calendar-title">—</div>
+          <button id="miniNextMonth" class="panel-btn subtle">▶</button>
+        </div>
+        <div id="miniCalendarGrid" class="mini-calendar-grid"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-title">BULLET INDEX</div>
+        </div>
+        <div class="bullet-stats">
+          <div class="bullet-pill">
+            <span>Inbox</span>
+            <strong id="inboxCount">0</strong>
+          </div>
+          <div class="bullet-pill">
+            <span>Planifié</span>
+            <strong id="plannedCount">0</strong>
+          </div>
+          <div class="bullet-pill">
+            <span>Migré</span>
+            <strong id="migratedCount">0</strong>
+          </div>
+          <div class="bullet-pill">
+            <span>Terminé</span>
+            <strong id="doneCount">0</strong>
+          </div>
+        </div>
       </section>
     </aside>
 
-    <main class="main">
-      <header class="topbar">
-        <div>
-          <div class="eyebrow">CENTRE DE PILOTAGE</div>
-          <h1 id="headerTitle">Dashboard</h1>
-        </div>
+    <main class="workspace">
 
-        <div class="topbar-right">
-          <div class="date-chip" id="todayLabel"></div>
-          <button id="resetDemoBtn" class="ghost-btn">Réinitialiser la démo</button>
-        </div>
-      </header>
+      <section id="view-day" class="view active">
+        <div class="workspace-grid">
 
-      <section id="view-dashboard" class="view active">
-        <div class="grid-two">
           <article class="card hero-card">
-            <div class="card-head">
-              <span class="card-kicker">TRAJECTOIRE DU JOUR</span>
-              <span class="status-pill">live</span>
-            </div>
-
-            <div class="hero-stats">
-              <div class="stat-block">
-                <div class="stat-label">Énergie</div>
-                <div id="energyValue" class="stat-value">76%</div>
+            <div class="card-headline">
+              <div>
+                <div class="card-kicker">TRAJECTOIRE DU JOUR</div>
+                <h1 id="dayTitle">JOUR ACTIF</h1>
               </div>
-              <div class="stat-block">
-                <div class="stat-label">Temps injecté</div>
-                <div id="workedTodayValue" class="stat-value">0h</div>
-              </div>
-              <div class="stat-block">
-                <div class="stat-label">Blocs réalisés</div>
-                <div id="completedBlocksValue" class="stat-value">0</div>
+              <div class="hero-badges">
+                <span class="hero-badge" id="selectedDateLabel">—</span>
+                <span class="hero-badge">timeline modulaire</span>
               </div>
             </div>
 
-            <div class="curve-wrap">
-              <div class="curve-title">DENSITÉ DE JOURNÉE</div>
+            <div class="hero-row">
+              <div class="hero-stat">
+                <div class="mini-label">Temps prévu</div>
+                <div id="plannedMinutesLabel" class="hero-stat-value">0h</div>
+              </div>
+              <div class="hero-stat">
+                <div class="mini-label">Temps engagé</div>
+                <div id="scheduledMinutesLabel" class="hero-stat-value">0h</div>
+              </div>
+              <div class="hero-stat">
+                <div class="mini-label">Charge du jour</div>
+                <div id="dayChargeLabel" class="hero-stat-value">0%</div>
+              </div>
+              <div class="hero-stat">
+                <div class="mini-label">Projet dominant</div>
+                <div id="dominantProjectLabel" class="hero-stat-value shrink">—</div>
+              </div>
+            </div>
+
+            <div class="density-wrap">
+              <div class="mini-label">DENSITÉ</div>
               <div class="density-bar">
                 <div id="densityFill" class="density-fill"></div>
               </div>
@@ -86,83 +206,80 @@
           </article>
 
           <article class="card">
-            <div class="section-title-row">
-              <h2>LIGNE DU JOUR</h2>
-              <span class="mini-badge">Tetris temporel</span>
+            <div class="card-headline compact">
+              <div>
+                <div class="card-kicker">BLOCS ARMÉS</div>
+                <h2>CAPACITÉ DU JOUR</h2>
+              </div>
             </div>
+
+            <div class="capacity-grid">
+              <label class="capacity-item">
+                <span>2h</span>
+                <input id="cap120" type="number" min="0" max="10" />
+              </label>
+              <label class="capacity-item">
+                <span>1h</span>
+                <input id="cap60" type="number" min="0" max="14" />
+              </label>
+              <label class="capacity-item">
+                <span>30 min</span>
+                <input id="cap30" type="number" min="0" max="20" />
+              </label>
+              <label class="capacity-item">
+                <span>15 min</span>
+                <input id="cap15" type="number" min="0" max="30" />
+              </label>
+            </div>
+
+            <div class="capacity-actions">
+              <button id="saveCapacityBtn" class="panel-btn primary">Mettre à jour</button>
+            </div>
+
+            <div id="capacityVisual" class="capacity-visual"></div>
+          </article>
+
+          <article class="card full-span">
+            <div class="card-headline compact">
+              <div>
+                <div class="card-kicker">TEMPS LINÉAIRE</div>
+                <h2>LIGNE DU JOUR</h2>
+              </div>
+              <div class="timeline-legend">
+                <span class="legend-chip deep">Travail profond</span>
+                <span class="legend-chip admin">Admin</span>
+                <span class="legend-chip resource">Ressource</span>
+                <span class="legend-chip sport">Sport</span>
+                <span class="legend-chip pause">Pause</span>
+                <span class="legend-chip external">Agenda</span>
+              </div>
+            </div>
+
             <div id="dayTimeline" class="day-timeline"></div>
           </article>
-        </div>
-
-        <div class="grid-two">
-          <article class="card">
-            <div class="section-title-row">
-              <h2>PROJETS ACTIFS</h2>
-              <span class="mini-badge">progression</span>
-            </div>
-            <div id="projectCards" class="project-cards"></div>
-          </article>
 
           <article class="card">
-            <div class="section-title-row">
-              <h2>JOURNAL DE CYCLE</h2>
-              <span class="mini-badge">automatique</span>
-            </div>
-            <div id="dailyLog" class="daily-log"></div>
-          </article>
-        </div>
-      </section>
-
-      <section id="view-day" class="view">
-        <div class="grid-two">
-          <article class="card">
-            <div class="section-title-row">
-              <h2>BLOCS ARMÉS</h2>
-              <span class="mini-badge">menu du jour</span>
+            <div class="card-headline compact">
+              <div>
+                <div class="card-kicker">INJECTION</div>
+                <h2>NOUVELLE TÂCHE</h2>
+              </div>
             </div>
 
-            <div class="capacity-builder">
-              <div class="capacity-row">
-                <label>Blocs 2h</label>
-                <input id="input2h" type="number" min="0" max="8" value="2" />
-              </div>
-              <div class="capacity-row">
-                <label>Blocs 1h</label>
-                <input id="input1h" type="number" min="0" max="12" value="2" />
-              </div>
-              <div class="capacity-row">
-                <label>Blocs 30 min</label>
-                <input id="input30m" type="number" min="0" max="20" value="2" />
-              </div>
-              <div class="capacity-row">
-                <label>Blocs 15 min</label>
-                <input id="input15m" type="number" min="0" max="20" value="2" />
-              </div>
-
-              <button id="saveCapacityBtn" class="primary-btn">Mettre à jour la capacité</button>
-            </div>
-          </article>
-
-          <article class="card">
-            <div class="section-title-row">
-              <h2>INJECTER UN BLOC</h2>
-              <span class="mini-badge">nouvelle session</span>
-            </div>
-
-            <div class="session-form">
+            <form id="taskForm" class="task-form">
               <label>
-                Projet
-                <select id="sessionProject"></select>
+                Titre
+                <input id="taskTitle" type="text" placeholder="ex. rédiger intro article" required />
               </label>
 
               <label>
-                Titre du bloc
-                <input id="sessionTitle" type="text" placeholder="ex. rédaction intro article" />
+                Projet
+                <select id="taskProject"></select>
               </label>
 
               <label>
                 Catégorie
-                <select id="sessionCategory">
+                <select id="taskCategory">
                   <option value="deep">Travail profond</option>
                   <option value="admin">Administratif</option>
                   <option value="resource">Ressource</option>
@@ -171,105 +288,288 @@
                 </select>
               </label>
 
-              <div class="session-form-grid">
+              <div class="form-row">
                 <label>
-                  Début
-                  <input id="sessionStart" type="time" value="08:00" />
+                  Date
+                  <input id="taskDate" type="date" />
+                </label>
+
+                <label>
+                  Priorité
+                  <select id="taskPriority">
+                    <option value="1">Basse</option>
+                    <option value="2">Moyenne</option>
+                    <option value="3">Haute</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="form-row">
+                <label>
+                  Heure début
+                  <input id="taskStart" type="time" value="08:00" />
                 </label>
 
                 <label>
                   Durée
-                  <select id="sessionDuration">
+                  <select id="taskDuration">
                     <option value="120">2h</option>
+                    <option value="90">1h30</option>
                     <option value="60">1h</option>
+                    <option value="45">45 min</option>
                     <option value="30">30 min</option>
                     <option value="15">15 min</option>
                   </select>
                 </label>
               </div>
 
-              <button id="addSessionBtn" class="primary-btn">Ajouter le bloc</button>
+              <label>
+                Notes
+                <textarea id="taskNotes" rows="3" placeholder="étape précise, idée, contrainte…"></textarea>
+              </label>
+
+              <div class="form-actions">
+                <button type="submit" class="panel-btn primary">Créer la tâche</button>
+              </div>
+            </form>
+          </article>
+
+          <article class="card">
+            <div class="card-headline compact">
+              <div>
+                <div class="card-kicker">ENGAGEMENTS</div>
+                <h2>AGENDA EXTERNE</h2>
+              </div>
             </div>
+
+            <div class="google-placeholder">
+              <div class="placeholder-box">
+                <div class="placeholder-title">Connexion Google Agenda</div>
+                <p>
+                  La structure est prête, mais la vraie synchronisation Google
+                  nécessite OAuth/API. Cette V1 permet de gérer des engagements
+                  externes localement dans la même logique visuelle.
+                </p>
+              </div>
+            </div>
+
+            <form id="externalForm" class="task-form compact-form">
+              <label>
+                Intitulé
+                <input id="externalTitle" type="text" placeholder="ex. rendez-vous, cours, réunion" />
+              </label>
+
+              <div class="form-row">
+                <label>
+                  Date
+                  <input id="externalDate" type="date" />
+                </label>
+                <label>
+                  Heure
+                  <input id="externalStart" type="time" value="13:00" />
+                </label>
+              </div>
+
+              <label>
+                Durée
+                <select id="externalDuration">
+                  <option value="30">30 min</option>
+                  <option value="60">1h</option>
+                  <option value="90">1h30</option>
+                  <option value="120">2h</option>
+                </select>
+              </label>
+
+              <div class="form-actions">
+                <button type="submit" class="panel-btn primary">Ajouter engagement</button>
+              </div>
+            </form>
           </article>
         </div>
-
-        <article class="card">
-          <div class="section-title-row">
-            <h2>TIMELINE RÉELLE</h2>
-            <span class="mini-badge">temps linéaire</span>
-          </div>
-          <div id="dayTimelineDetailed" class="day-timeline detailed"></div>
-        </article>
       </section>
 
       <section id="view-week" class="view">
         <article class="card">
-          <div class="section-title-row">
-            <h2>TRAJECTOIRE HEBDO</h2>
-            <span class="mini-badge">linéaire</span>
+          <div class="card-headline">
+            <div>
+              <div class="card-kicker">TRAJECTOIRE</div>
+              <h2>SEMAINE LINÉAIRE</h2>
+            </div>
           </div>
           <div id="weekStrip" class="week-strip"></div>
+        </article>
+
+        <article class="card">
+          <div class="card-headline compact">
+            <div>
+              <div class="card-kicker">ENGAGEMENTS</div>
+              <h2>VISION D’ENSEMBLE</h2>
+            </div>
+          </div>
+          <div id="weekEngagements" class="week-engagements"></div>
         </article>
       </section>
 
       <section id="view-month" class="view">
         <article class="card">
-          <div class="section-title-row">
-            <h2>CALENDRIER MISSIONNEL</h2>
-            <span class="mini-badge">vue mensuelle</span>
+          <div class="card-headline">
+            <div>
+              <div class="card-kicker">CALENDRIER</div>
+              <h2>VISION MENSUELLE</h2>
+            </div>
+            <div class="month-nav">
+              <button id="monthPrevBtn" class="panel-btn subtle">◀</button>
+              <div id="monthLabel" class="month-label">—</div>
+              <button id="monthNextBtn" class="panel-btn subtle">▶</button>
+            </div>
           </div>
           <div id="monthGrid" class="month-grid"></div>
         </article>
       </section>
 
       <section id="view-projects" class="view">
-        <article class="card">
-          <div class="section-title-row">
-            <h2>PROJETS</h2>
-            <span class="mini-badge">avancement</span>
-          </div>
-          <div id="projectsTable" class="projects-table"></div>
-        </article>
+        <div class="workspace-grid">
+          <article class="card">
+            <div class="card-headline compact">
+              <div>
+                <div class="card-kicker">DOSSIERS</div>
+                <h2>PROJETS</h2>
+              </div>
+            </div>
+            <div id="projectWorkbench" class="project-workbench"></div>
+          </article>
+
+          <article class="card">
+            <div class="card-headline compact">
+              <div>
+                <div class="card-kicker">CRÉATION</div>
+                <h2>NOUVEAU PROJET</h2>
+              </div>
+            </div>
+
+            <form id="projectForm" class="task-form">
+              <label>
+                Nom du projet
+                <input id="projectName" type="text" placeholder="ex. Mémoire, recherche, sport..." required />
+              </label>
+
+              <label>
+                Objectif
+                <textarea id="projectObjective" rows="3" placeholder="résultat visé, cap du projet..."></textarea>
+              </label>
+
+              <label>
+                Couleur
+                <input id="projectColor" type="color" value="#64c8ff" />
+              </label>
+
+              <div class="form-actions">
+                <button type="submit" class="panel-btn primary">Créer le projet</button>
+              </div>
+            </form>
+          </article>
+        </div>
+      </section>
+
+      <section id="view-journal" class="view">
+        <div class="workspace-grid">
+          <article class="card">
+            <div class="card-headline compact">
+              <div>
+                <div class="card-kicker">INDEX</div>
+                <h2>INBOX</h2>
+              </div>
+            </div>
+            <div id="journalInbox" class="journal-column"></div>
+          </article>
+
+          <article class="card">
+            <div class="card-headline compact">
+              <div>
+                <div class="card-kicker">PLANIFICATION</div>
+                <h2>PLANIFIÉ</h2>
+              </div>
+            </div>
+            <div id="journalPlanned" class="journal-column"></div>
+          </article>
+
+          <article class="card">
+            <div class="card-headline compact">
+              <div>
+                <div class="card-kicker">MIGRATION</div>
+                <h2>MIGRÉ</h2>
+              </div>
+            </div>
+            <div id="journalMigrated" class="journal-column"></div>
+          </article>
+
+          <article class="card">
+            <div class="card-headline compact">
+              <div>
+                <div class="card-kicker">ARCHIVE</div>
+                <h2>TERMINÉ</h2>
+              </div>
+            </div>
+            <div id="journalDone" class="journal-column"></div>
+          </article>
+        </div>
       </section>
 
       <section id="view-report" class="view">
-        <div class="grid-two">
+        <div class="workspace-grid">
           <article class="card">
-            <div class="section-title-row">
-              <h2>RAPPORT DU JOUR</h2>
-              <span class="mini-badge">auto</span>
+            <div class="card-headline compact">
+              <div>
+                <div class="card-kicker">SYNTHÈSE</div>
+                <h2>RAPPORT DU JOUR</h2>
+              </div>
             </div>
-            <div id="dayReport" class="report-box"></div>
+            <div id="dayReport" class="report-grid"></div>
           </article>
 
           <article class="card">
-            <div class="section-title-row">
-              <h2>RAPPORT DE SEMAINE</h2>
-              <span class="mini-badge">synthèse</span>
+            <div class="card-headline compact">
+              <div>
+                <div class="card-kicker">SYNTHÈSE</div>
+                <h2>RAPPORT DE SEMAINE</h2>
+              </div>
             </div>
-            <div id="weekReport" class="report-box"></div>
+            <div id="weekReport" class="report-grid"></div>
           </article>
         </div>
       </section>
+
     </main>
 
     <aside class="rightbar">
-      <section class="side-panel">
-        <div class="panel-label">TÂCHES TERMINÉES</div>
-        <div id="completedList" class="completed-list"></div>
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-title">ACTION SUIVANTE</div>
+        </div>
+        <div id="nextActionCard" class="next-action-card"></div>
       </section>
 
-      <section class="side-panel">
-        <div class="panel-label">SIGNAL DE CHARGE</div>
-        <div class="charge-ring-wrap">
-          <div class="charge-ring">
-            <div id="chargeRingValue" class="charge-ring-value">0%</div>
-          </div>
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-title">BLOCS DU JOUR</div>
+        </div>
+        <div id="dayBlocksList" class="stack-list"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-title">JOURNAL RAPIDE</div>
+        </div>
+        <textarea id="dailyNotesInput" class="side-notes" rows="8" placeholder="Ce qui a avancé, ce qui coince, ce qu’il faut migrer…"></textarea>
+        <div class="form-actions">
+          <button id="saveDailyNotesBtn" class="panel-btn primary">Sauvegarder</button>
         </div>
       </section>
 
-      <section class="side-panel">
-        <div class="panel-label">RÉCAP EXPRESS</div>
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-title">RÉCAP EXPRESS</div>
+        </div>
         <div id="quickSummary" class="quick-summary"></div>
       </section>
     </aside>
